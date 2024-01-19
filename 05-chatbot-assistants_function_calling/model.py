@@ -25,31 +25,7 @@ class OpenAIBot:
         {
             "type": "function",
             "function": {
-                "name": "get_income_statement",
-                "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "ticker": {"type": "string", "description": "The short name of the company"},
-                        "period": {"type": "string", "description": "over a quarterly or annual period"},
-                        "limit": {"type": "integer", "description": "periods to analyze"}
-                    },
-                    "required": ["ticker"],
-                },
-            },
-        },
-        {
-            "type": "function",
-            "function": {
-                "name": "get_balance_sheet",
-                "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "ticker": {"type": "string", "description": "The short name of the company"},
-                        "period": {"type": "string", "description": "over a quarterly or annual period"},
-                        "limit": {"type": "integer", "description": "periods to analyze"}
-                    },
-                    "required": ["ticker"],
-                },
+                "name": "get_students"
             },
         }
     ]
@@ -66,14 +42,10 @@ class OpenAIBot:
         )
         
         response_message: ChatCompletionMessage = response.choices[0].message
-
         tool_calls = response_message.tool_calls
-        print("* First Reponse Tool Calls: ", tool_calls)
-
         if tool_calls:
             available_functions = {
-                "get_income_statement": get_income_statement,
-                "get_balance_sheet": get_balance_sheet,
+                "get_students": get_students,
             }
             messages.append(response_message)
 
@@ -84,8 +56,6 @@ class OpenAIBot:
                 if function_name in available_functions:
                     function_to_call = available_functions[function_name]
                     
-                    print("* function_to_call: ", function_to_call)
-
                     function_response = function_to_call(**function_args)
                     messages.append(
                         {
@@ -122,14 +92,7 @@ class OpenAIBot:
     def addMessage(self, message: MessageItem)->None: 
         self.messages.append(message)
 
-FMP_API_KEY = os.environ['FMP_API_KEY']
-
-def get_income_statement(ticker, period = 'annual', limit = 10):
-    url = f"https://financialmodelingprep.com/api/v3/income-statement/{ticker}?period={period}&limit={limit}&apikey={FMP_API_KEY}"
-    response = requests.get(url)
-    return json.dumps(response.json())
-
-def get_balance_sheet(ticker, period = 'annual', limit = 10):
-    url = f"https://financialmodelingprep.com/api/v3/balance-sheet-statement/{ticker}?period={period}&limit={limit}&apikey={FMP_API_KEY}"
+def get_students():
+    url = f"http://localhost/sisgb-web/public/api/chatbot"
     response = requests.get(url)
     return json.dumps(response.json())
