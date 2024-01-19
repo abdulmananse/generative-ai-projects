@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException, Depends
+from sqlalchemy import desc
 from sqlalchemy.orm import Session
 from .database import SessionLocal, Todo
 from pydantic import BaseModel
@@ -29,7 +30,7 @@ def get_db():
 
 @app.get("/api/todos")
 def get_todos(db: Session = Depends(get_db)):
-    todos = db.query(Todo).all()
+    todos = db.query(Todo).order_by(desc(Todo.id)).all()
     return todos
 
 @app.post("/api/todos")

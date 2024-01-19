@@ -30,7 +30,7 @@ export default function Index() {
     }, []);
     
     const addTask = (task: task) => {
-      setTasks([...tasks, task]);
+      setTasks([task, ...tasks]);
     };
 
     const checkTask = (id: number) => {
