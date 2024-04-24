@@ -1,7 +1,7 @@
 import Task from '@/components/todo/task';
 import {task} from '@/types/todo';
 
-const Tasks = ({ 
+const Tasks = ({
               tasks,
               checkTask, 
               deleteTask 
