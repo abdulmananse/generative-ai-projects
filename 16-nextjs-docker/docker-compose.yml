@@ -1,0 +1,17 @@
+services:
+  app:
+    build: .
+    image: nextjs-dev
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+    develop:
+      watch:
+      - action: sync
+        path: ./app
+        target: ./code/app
+        ignore:
+          - node_modules/
+      - action: rebuild
+        path: package.json
